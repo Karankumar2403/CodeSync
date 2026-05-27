@@ -1,113 +1,104 @@
 # ⚡ CodeSync
 
-<p align="center">
-  <img src="https://img.shields.io/badge/CodeSync-Realtime%20Collaborative%20Editor-blueviolet?style=for-the-badge&logo=visual-studio-code" alt="CodeSync Badge" />
-  <img src="https://img.shields.io/badge/MERN-Stack-green?style=for-the-badge&logo=mongodb" alt="MERN Stack Badge" />
-  <img src="https://img.shields.io/badge/Socket.IO-v4.7-black?style=for-the-badge&logo=socketdotio" alt="Socket.io Badge" />
-  <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License Badge" />
-</p>
-
-CodeSync is a production-grade, real-time collaborative code editor designed to enable developers to code together in real-time, share syntax-highlighted sandboxes, and run code instantly. Modeled after professional IDE sharing solutions, CodeSync leverages the power of WebSockets, JWT session management, Monaco Editor core, and isolated compilation logic to deliver a seamless remote pair-programming experience.
+A modern, high-performance real-time collaborative code editing platform designed for developers, educators, and remote pairs. Built on top of the **MERN** stack and powered by **Socket.IO**, CodeSync facilitates seamless, low-latency code sharing and synchronous pair programming directly in the browser.
 
 ---
 
-## 🏗️ System Architecture
+## 🌟 Key Highlights
+
+*   **Lag-Free Collaborative Editing**: Experience zero-latency code syncing across multiple clients in a shared environment.
+*   **Presence Indicators & Cursor Telemetry**: Monitor connected teammates with customizable avatar cards and live cursor positions highlighted in real time.
+*   **Monaco-Powered Canvas**: Integrates Microsoft's Monaco Editor engine, supplying professional autocomplete, syntax highlighting, bracket auto-matching, and multi-language support.
+*   **Persistent Workspaces & JWT Security**: Offers both guest access for rapid sessions and robust user accounts using JSON Web Tokens (JWT) for saving work history.
+*   **In-App Peer Chat**: A minimalist, high-speed chat sidebar allows team members to communicate without switching tabs.
+*   **Sleek Glassmorphism Interface**: Styled with curated dark-mode HSL gradients, clean typography, and subtle micro-animations.
+
+---
+
+## 🏗️ Architecture Design
 
 ```mermaid
 graph TB
-    subgraph Client-Side (React App)
-        Vite[Vite React App]
+    subgraph Client-Side (React Application)
+        Vite[Vite Bundler]
         Monaco[Monaco Editor Component]
         SocketClient[Socket.IO Client Engine]
-        Context[React Context & State Manager]
+        State[React Context / State]
         
         Vite --> Monaco
         Vite --> SocketClient
-        Vite --> Context
+        Vite --> State
     end
 
     subgraph Backend Services (Node.js & Express)
-        Server[Express Server App]
-        SocketServer[Socket.IO Server Engine]
-        JWTAuth[JWT & Cryptography Service]
+        Server[Express App Server]
+        SocketServer[Socket.IO Web Server]
+        Auth[JWT Cryptography Middleware]
         
-        SocketClient <-->|WebSocket Protocol| SocketServer
-        Vite <-->|REST HTTP Requests| Server
-        Server --> JWTAuth
+        SocketClient <-->|WebSockets (WS)| SocketServer
+        Vite <-->|HTTP REST API| Server
+        Server --> Auth
     end
 
-    subgraph Database & Persistence
-        DB[(MongoDB Cloud Cluster)]
+    subgraph Database Layer
+        DB[(MongoDB Cloud Database)]
         Server <-->|Mongoose ODM| DB
     end
 
-    classDef client fill:#5b21b6,stroke:#7c3aed,stroke-width:2px,color:#fff;
+    classDef client fill:#4c1d95,stroke:#8b5cf6,stroke-width:2px,color:#fff;
     classDef server fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#fff;
     classDef database fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff;
     
-    class Vite,Monaco,SocketClient,Context client;
-    class Server,SocketServer,JWTAuth server;
+    class Vite,Monaco,SocketClient,State client;
+    class Server,SocketServer,Auth server;
     class DB database;
 ```
 
 ---
 
-## ✨ Features
+## 🛠️ Technology Stack
 
-*   **Real-time Collaborative Editing**: Multiple users can connect to the same room, editing code simultaneously with near-zero latency.
-*   **Live User Presence & Cursor Tracking**: See who is currently in the workspace with interactive user avatars, activity badges, and distinct cursor highlights.
-*   **VS Code (Monaco) Editor Integration**: Powered by Microsoft's Monaco Editor, supporting autocomplete, auto-closing brackets, syntax error reporting, minimap, and automatic formatting.
-*   **Multi-Language Sandbox Support**: Swap code environments on-the-fly between Javascript, Python, C++, Java, and HTML/CSS with fully persistent room configurations.
-*   **Robust JWT Authentication & Guest Access**: Secure registration and login using encrypted sessions, as well as a quick guest mode to join a shared room instantly.
-*   **Session History & Dashboard**: Logged-in users can access a personal dashboard containing all created rooms, saved snippets, and shareable read-only links.
-*   **Live In-Room Chat**: Integrated real-time messaging panel to communicate with collaborators directly beside your code canvas.
-*   **Elegant Glassmorphism UI**: Built with dynamic HSL-based themes, responsive styling, dark mode support, and micro-interactive animations.
+*   **Frontend**: React (Vite), Tailwind CSS, Monaco Editor (`@monaco-editor/react`), Socket.io-client, React Router Dom, React Hot Toast.
+*   **Backend**: Node.js, Express.js, Socket.IO, Bcrypt.js, Mongoose.
+*   **Database**: MongoDB.
 
 ---
 
-## 🛠️ Tech Stack
-
-*   **Frontend**: React (Vite.js), Tailwind CSS, Monaco Editor (`@monaco-editor/react`), Socket.io-client, React Router Dom, React Hot Toast.
-*   **Backend**: Node.js, Express.js, Socket.IO, JSON Web Tokens (JWT), Bcrypt.js, Mongoose.
-*   **Database**: MongoDB (Atlas Cloud or Local Instance).
-
----
-
-## 📁 Repository Structure
+## 📁 Repository Directory Structure
 
 ```text
 codesync/
 ├── backend/
-│   ├── config/             # DB and third-party API configurations
-│   ├── controllers/        # Express request handling controllers
-│   ├── middleware/         # JWT authorization and validation middlewares
-│   ├── models/             # Mongoose database schemas
-│   ├── routes/             # REST API endpoint definitions
-│   ├── socket/             # Socket.IO event handler functions
-│   ├── .env.example        # Reference environment configuration for backend
-│   ├── package.json        # Backend NPM package manifest
-│   └── server.js           # Server application entrypoint
+│   ├── config/             # Database and external integrations config
+│   ├── controllers/        # Express handlers for incoming requests
+│   ├── middleware/         # Token validation and security checks
+│   ├── models/             # Mongoose MongoDB schemas
+│   ├── routes/             # REST endpoint routing definitions
+│   ├── socket/             # Socket.IO connection event channels
+│   ├── .env.example        # Environment setup template for the server
+│   ├── package.json        # Server configuration and dependencies manifest
+│   └── server.js           # Express app bootstrapper
 └── frontend/
     ├── public/             # Static public assets
     ├── src/
-    │   ├── assets/         # App icons, backgrounds, fonts
-    │   ├── components/     # Reusable UI elements (Buttons, Inputs, Modals)
-    │   ├── context/        # Session and theme React context providers
-    │   ├── hooks/          # Custom hooks (Sockets handler, Auth helper)
-    │   ├── pages/          # Layout pages (Home, Auth, Dashboard, EditorWorkspace)
-    │   ├── App.jsx         # App router and layout wrapper
-    │   ├── index.css       # Core styling & custom HSL scrollbars
-    │   └── main.jsx        # Frontend application entrypoint
-    ├── .env.example        # Reference environment configuration for frontend
-    ├── package.json        # Frontend NPM package manifest
-    └── vite.config.js      # Vite project bundler settings
+    │   ├── assets/         # CSS style sheets, fonts, and assets
+    │   ├── components/     # Reusable React buttons, overlays, inputs
+    │   ├── context/        # Session and theme state contexts
+    │   ├── hooks/          # Sockets initialization and authentication hooks
+    │   ├── pages/          # App views (Landing, login, dashboards, workspace)
+    │   ├── App.jsx         # App routes manager
+    │   ├── index.css       # Core Tailwind CSS directives
+    │   └── main.jsx        # React entrypoint
+    ├── .env.example        # Environment setup template for the client
+    ├── package.json        # Client configuration and dependencies manifest
+    └── vite.config.js      # Vite compilation settings
 ```
 
 ---
 
 ## 🚀 Setup & Installation Guide
 
-Follow these steps to set up and run CodeSync locally:
+Get CodeSync up and running locally with these steps:
 
 ### 1. Prerequisites
 Ensure you have the following installed on your machine:
@@ -121,76 +112,76 @@ git clone https://github.com/Karankumar2403/CodeSync.git
 cd CodeSync
 ```
 
-### 3. Backend Setup
-1. Navigate to the backend directory:
+### 3. Backend Configuration
+1. Navigate to the backend folder:
     ```bash
     cd backend
     ```
-2. Install the necessary dependencies:
+2. Install npm dependencies:
     ```bash
     npm install
     ```
-3. Create a `.env` file from the example:
+3. Initialize the environment configuration:
     ```bash
     cp .env.example .env
     ```
-4. Update the `.env` variables with your specific database connection and JWT credentials:
+4. Define your MongoDB Atlas URI, Port, and a secure signature key inside `.env`:
     ```env
     PORT=5000
-    MONGO_URI=mongodb+srv://<username>:<password>@cluster0.example.mongodb.net/codesync?retryWrites=true&w=majority
+    MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/codesync?retryWrites=true&w=majority
     JWT_SECRET=your_super_secure_jwt_secret_key_here
     CLIENT_URL=http://localhost:5173
     ```
-5. Start the backend dev server:
+5. Launch the backend server in development mode:
     ```bash
     npm run dev
     ```
 
-### 4. Frontend Setup
+### 4. Frontend Configuration
 1. Open a new terminal session and navigate to the frontend directory:
     ```bash
     cd ../frontend
     ```
-2. Install the dependencies:
+2. Install dependencies:
     ```bash
     npm install
     ```
-3. Create a `.env` file from the example:
+3. Copy the environment configuration:
     ```bash
     cp .env.example .env
     ```
-4. Define your backend URL:
+4. Link the API URL to the backend port inside `.env`:
     ```env
     VITE_BACKEND_URL=http://localhost:5000
     ```
-5. Start the frontend application in development mode:
+5. Launch the client:
     ```bash
     npm run dev
     ```
-6. Open `http://localhost:5173` in your browser to start pair-programming!
+6. Visit `http://localhost:5173` in your browser to begin pair-programming!
 
 ---
 
-## 🔌 API & WebSocket Reference
+## 🔌 API & Event Documentation
 
-### 🌐 REST API Endpoints
+### 🌐 REST API Router
 
-| Endpoint | Method | Authentication | Description |
+| Route | HTTP Verb | Security | Purpose |
 | :--- | :--- | :--- | :--- |
-| `/api/auth/register` | POST | None | Registers a new user account |
-| `/api/auth/login` | POST | None | Authenticates user credentials and sets token cookie |
-| `/api/auth/logout` | POST | Required | Clears user auth cookie / invalidates session token |
-| `/api/auth/me` | GET | Required | Fetches the authenticated user profile |
-| `/api/rooms/create` | POST | Guest/User | Creates a new active workspace session |
-| `/api/rooms/validate/:roomId`| GET | Guest/User | Verifies the validity/existence of a Room ID |
-| `/api/snippets` | GET | Required | Returns user's saved coding workspaces |
-| `/api/snippets/save` | POST | Required | Saves the active room editor state to User history |
+| `/api/auth/register` | POST | None | Sign up a new user account |
+| `/api/auth/login` | POST | None | Authenticate credentials and set session cookie |
+| `/api/auth/logout` | POST | Required | Clear credentials cookie and kill active session |
+| `/api/auth/me` | GET | Required | Retrieve current user profile details |
+| `/api/rooms/create` | POST | Guest/User | Initialize a new active pairing room session |
+| `/api/rooms/validate/:roomId` | GET | Guest/User | Checks if a given Room ID is active and joinable |
+| `/api/snippets` | GET | Required | Fetch saved snippets history for the user |
+| `/api/snippets/save` | POST | Required | Commit current room editor code state to snippets database |
 
-### 💬 WebSockets Communication Events
+### 💬 Socket.IO Event Schema
 
-The live collaboration module works over real-time events. Below are the core event schemas:
+CodeSync uses bidirectional event exchanges to sync rooms. Below are the key payload specifications:
 
-#### Client-to-Server (`Client -> Server`)
+#### Outbound Client Events (`Client -> Server`)
 *   `join-room`: Sent when a client enters an active collaborative session room.
     ```json
     {
@@ -221,7 +212,7 @@ The live collaboration module works over real-time events. Below are the core ev
     }
     ```
 
-#### Server-to-Client (`Server -> Client`)
+#### Inbound Server Events (`Server -> Client`)
 *   `user-joined`: Broadcast to active room members when a new collaborator joins.
     ```json
     {
@@ -249,4 +240,4 @@ The live collaboration module works over real-time events. Below are the core ev
 ---
 
 ## 📄 License
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+This project is released under the terms of the MIT License. Refer to [LICENSE](LICENSE) for further details.
