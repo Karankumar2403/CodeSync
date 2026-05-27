@@ -10,7 +10,7 @@ CodeSync uses a client-server architecture powered by WebSockets to achieve near
 
 ```mermaid
 graph TB
-    subgraph Client-Side (React App)
+    subgraph ClientSide["Client-Side (React App)"]
         CRA[React App - Create React App]
         CodeMirror[CodeMirror 5 Editor]
         SocketClient[Socket.IO Client]
@@ -21,7 +21,7 @@ graph TB
         CRA --> Roster
     end
 
-    subgraph Backend Services (Node.js & Express)
+    subgraph BackendServices["Backend Services (Node.js & Express)"]
         Server[Express App Server]
         SocketServer[Socket.IO Server Engine]
         Registry[In-Memory User Roster]
